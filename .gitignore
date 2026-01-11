@@ -1,0 +1,10 @@
+venv/
+.venv/
+.env
+.env-non-dev
+.pytest_cache/
+.vscode/
+__pycache__/
+*.py[cod]
+*.pyo
+app/logs/logs.json

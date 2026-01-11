@@ -1,0 +1,115 @@
+Есть в 1С таблица с заказами. Есть какой-то скрипт на 1С, который по этой таблице формирует SQL-запрос. Сейчас начальник берет этот sql-запрос копирует в эксель, потом выносит из таблицы в ворд. Из ворда копирует этот запрос уже в базу данных MS SQL, который выполняется по частям. Эти этапы прописаны в этом SQL-запросе в виде инструкции.
+-- СМ инструкцию ниже (пункты 1)б 2) и т.д.)!
+DECLARE @curdate DATETIME = GETDATE();
+
+/*
+DECLARE @data TABLE(
+[id_prod] INT
+,[version_prod] INT
+,[num_order] VARCHAR(50)
+,[count_apply] INT
+,[entry_type] INT
+,[date] DATETIME
+)
+DECLARE @num_orders TABLE(
+[num_order] VARCHAR(50)
+)
+
+INSERT INTO @data
+(
+id_prod]
+,[version_prod]
+,[num_order]
+,[count_apply] 
+,[entry_type] 
+,[date] 
+)
+*/
+SELECT
+[t].[id_prod]
+,ISNULL([p].[version_prod],[t].[version_prod]) [version_prod]
+,[t].[num_order]
+,[t].[count_apply]
+,[t].[entry_type]
+, @curdata [date]
+FROM
+
+(
+SELECT 59913 [id_prod], 0 [version_prod], '20 10 2147' [num_order], 25720 [count_apply], 1 [entry_type] UNION
+SELECT 35830 [id_prod], 0 [version_prod], '20 10 2147' [num_order], 15248 [count_apply], 1 [entry_type] UNION
+SELECT 64619 [id_prod], 0 [version_prod], '20 10 2147' [num_order], 14068 [count_apply], 1 [entry_type] UNION
+ТАКИХ SELECT-запросов может быть несколько тысяч
+
+--1) УДАЛИТЬ ПОСЛЕДНИЙ "UNION"!!!
+     --2) проверить, что запрос возвращает корректную таблицу
+     --3) разкомментировать код в начале и конце запроса (удалить все "/*" и "*/"
+) [t]
+LEFT JOIN [dbo].[product][p]
+ON [t].[id_prod] = [p].[id_prod]
+;
+
+/*
+--Получаем уникальные номера заводских заказов
+INSERT INTO @num_orders
+([num_order])
+SELECT DISTINCT
+[num_order]
+FROM @data
+
+--Добавляем позиции, которые "ушли" из плана
+INSERT INTO @data
+
+SELECT
+[t1].[id_prod]
+,[t1].[version_prod]
+,[t1].[num_order]
+,0 [count_apply]
+,1 [entry_type]
+, @curdate[date]
+
+FROM [db_pdo].[dbo].[kn51_2c_production_needs] [t1]
+LEFT JOIN @data[t2]
+ON [t1].[id_prod] = [t2].[id_prod]
+AND [t1].[version_prod] = [t2].[version_prod]
+AND [t1].[num_order] = [t2].[num_order]
+
+WHERE [t1].[entry_type] = 0
+AND [t1].[num_order] in (SELECT [num_order] FROM @num_orders)
+AND [t2].[id_prod] IS NULL
+
+
+--Удаляем данные прошлой загрузки (завершившейся с ошибкой), если есть
+DELETE FROM [db_pdo].[dbo].[kn51_2c_production_needs]
+WHERE [entry_type] =1
+AND [num_order] in (SELECT [num_order] FROM @num_orders)
+
+--Добавляем новые записи
+INSERT INTO [db_pdo].{dbo].[kn51_2c_production_needs]
+(
+[id_prod]
+,[version_prod]
+,[num_order]
+,[count_apply]
+,[entry_type]
+,[date]
+)
+SELECT
+[id_prod]
+,[version_prod]
+,[num_order]
+,[count_apply]
+,[entry_type]
+,[date]
+FROM @data
+
+--Переводим новые позиции в статус действующих
+UPDATE [db_pdo].[dbo].[kn51_2c_production_needs]
+SET [entry_type] = [entry_type] -1
+WHERE [num_order] IN (SELECT [num_order] FROM @num_orders)
+;
+
+*/
+
+ В базе данных есть таблица production_needs с полями id_prod, version_prod, num_order, count_apply, entry_type. Я не совсем понял, но когда добавляется новая версия документа поле entry_type уменьшается на 1, текущая версия имеет значение 0.
+
+Мне поставили задачу написать на Python API, чтобы это все делалось автоматически. Объясни подробно приведенные sql-запрос, что делается и архитектуру такого API
