@@ -1,6 +1,6 @@
 venv/
+.idea/
 .venv/
-.env
 .env-non-dev
 .pytest_cache/
 .vscode/

@@ -31,3 +31,22 @@ class ProductNeeeds1CModel(BaseModel):
     """Класс описывает схему данных продуктов и заказов, переданных из 1С"""
 
     data: List[Product1CModel]
+    batch_id: str
+    total_batches: int
+    current_batch: int
+
+
+class OneStringErrorDetail(BaseModel):
+    """Класс описывает схему одного продукта из 1С, если будет ошибка валидации"""
+
+    id_prod: int
+    index: int
+    error: str
+
+
+class OneStringValid(BaseModel):
+    """Класс описывает валидную запись продукта из 1С"""
+    id_prod: int
+    version_prod: int
+    num_order: str
+    count_apply: int

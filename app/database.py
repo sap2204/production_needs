@@ -5,7 +5,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from config import settings
+from app.config import settings
 from contextlib import contextmanager
 
 

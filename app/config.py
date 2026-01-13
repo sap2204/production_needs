@@ -8,12 +8,12 @@ from pathlib import Path
 
 def load_and_read_env_file(path: Path) -> dict:
     """Функция загружает и читает файл .env с переменными окружения"""
-    enviroments = {}
+    environments = {}
     try:
         if not path.exists():
             print(f'Файл .env не найден по пути: {path}')
             return {}
-        with open(path, 'r') as env_file:
+        with open(path, 'r', encoding='utf-8') as env_file:
             for line in env_file:
                 if not line:
                     continue
@@ -23,10 +23,10 @@ def load_and_read_env_file(path: Path) -> dict:
 
                 line = line.strip()
                 line_list = line.split("=")
-                enviroments[line_list[0]] = line_list[1]
+                environments[line_list[0]] = line_list[1]
     except FileNotFoundError:
-        enviroments = {}
-    return enviroments
+        environments = {}
+    return environments
 
 
 class Settings:
@@ -34,18 +34,24 @@ class Settings:
 
 
     env_file_path = Path(__file__).parent.parent / '.env'
-    enviroments = load_and_read_env_file(env_file_path)
+    environments = load_and_read_env_file(env_file_path)
+    server = environments.get('DB_SERVER')
+    db_name = environments.get('DB_NAME')
+    db_driver = environments.get('DB_DRIVER')
 
     @property
     def database_url(self):
-        return (
-                f"mssql+pyodbc://"
-                f"@{self.enviroments['DB_SERVER']}/"
-                f"{self.enviroments['DB_DATABASE']}?"
-                f"driver={self.enviroments['DB_DRIVER']}"
-                f"&trusted_connection={self.enviroments['DB_TRUSTED_CONNECTION']}"
-                f"&encrypt=no"
+        """Метод формирования строки подключения к БД"""
+
+        connection_string = (
+            f"mssql+pyodbc://@{self.server}/{self.db_name}"
+            f"?driver={self.db_driver}"
+            "&trusted_connection=yes"
         )
+
+        return connection_string
+
+
 
 settings = Settings()
 

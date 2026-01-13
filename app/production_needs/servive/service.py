@@ -4,7 +4,7 @@
 
 
 from app.database import get_session
-from models import ProductNeeeds1CModel
+from schemas import ProductNeeeds1CModel
 from sqlalchemy import text
 
 
