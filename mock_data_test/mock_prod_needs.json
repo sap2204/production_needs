@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id_prod": 1,
+      "version_prod": 0,
+      "num_order": 1,
+      "count_apply": 1,
+      "entry_type": 1
+    },
+    {
+      "id_prod": 2,
+      "version_prod": 0,
+      "num_order": 2,
+      "count_apply": 2,
+      "entry_type": 1
+    },
+    {
+      "id_prod": 3,
+      "version_prod": 0,
+      "num_order": 3,
+      "count_apply": 3,
+      "entry_type": 1
+    }
+  ],
+  "batch_id": "000_111",
+  "total_batches": 3,
+  "current_batch": 1
+}
