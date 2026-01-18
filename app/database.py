@@ -10,7 +10,7 @@ from contextlib import contextmanager
 
 
 engine = create_engine(settings.database_url)
-session_factory = sessionmaker(bind=engine)
+session_factory = sessionmaker(bind=engine, expire_on_commit=False)
 
 @contextmanager
 def get_session():
