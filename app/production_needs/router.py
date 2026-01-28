@@ -6,6 +6,7 @@ from app.production_needs.servive.valide_product import proccess_batch_data
 from app.production_needs.schemas import ProductNeeeds1CModel
 from app.production_needs.servive.service import uploader
 
+from app.database import get_session
 
 router = APIRouter(prefix="/products", tags=["Заказы продуктов"])
 
@@ -38,3 +39,11 @@ def upload_1c_data(request_data: ProductNeeeds1CModel):
     return result
 
     # Вставка в таблицу production_needs только валидных данных
+
+
+@router.get("/health")
+def check_db():
+    with get_session() as session:
+        sql = """SELECT 1 AS check_db FROM kn51_2c_production_needs"""
+        result = session.execute(sql)
+        return result.fetchone()
